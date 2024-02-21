@@ -1,0 +1,59 @@
+# Install and load the necessary libraries
+install.packages(c("ggplot2", "tidyr"))
+library(ggplot2)
+library(tidyr)
+
+# Given data
+product_data <- data.frame(
+  Product_ID = c(1, 2, 3, 4, 5),
+  Product_Name = c("Product A", "Product B", "Product C", "Product D", "Product E"),
+  Quantity_Available = c(250, 175, 300, 200, 220)
+)
+
+# Reshape the data for plotting using tidyr
+product_data_long <- pivot_longer(product_data, cols = -c(Product_ID, Product_Name), names_to = "Metric", values_to = "Value")
+
+# Stacked Bar Chart
+stacked_bar_chart <- ggplot(product_data_long, aes(x = Product_Name, y = Value, fill = Metric)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Stacked Bar Chart - Quantity Available for Each Product",
+       x = "Product Name",
+       y = "Quantity Available") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Rotate x-axis labels for better readability
+
+# Line Plot
+line_plot <- ggplot(product_data_long, aes(x = Product_Name, y = Value, group = Metric, color = Metric)) +
+  geom_line() +
+  labs(title = "Line Plot - Quantity Available for Each Product",
+       x = "Product Name",
+       y = "Quantity Available") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Rotate x-axis labels for better readability
+
+# Scatter Plot
+scatter_plot <- ggplot(product_data, aes(x = Product_ID, y = Quantity_Available)) +
+  geom_point() +
+  labs(title = "Scatter Plot - Quantity Available for Each Product",
+       x = "Product ID",
+       y = "Quantity Available")
+
+# Pie Plot
+pie_plot <- ggplot(product_data, aes(x = "", y = Quantity_Available, fill = Product_Name)) +
+  geom_bar(stat = "identity", width = 1) +
+  coord_polar("y") +
+  labs(title = "Pie Plot - Quantity Available for Each Product",
+       x = NULL,
+       y = NULL)
+
+# Histogram
+histogram <- ggplot(product_data, aes(x = Quantity_Available)) +
+  geom_histogram(binwidth = 50, fill = "blue", color = "black") +
+  labs(title = "Histogram - Distribution of Quantity Available",
+       x = "Quantity Available",
+       y = "Frequency")
+
+# Print the plots
+print(stacked_bar_chart)
+print(line_plot)
+print(scatter_plot)
+print(pie_plot)
+print(histogram)
